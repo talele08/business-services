@@ -66,46 +66,34 @@ public class CollectionsQueryBuilder {
             ":additionalDetails ," +
             "lastmodifiedby = :lastmodifiedby , lastmodifieddate =  :lastmodifieddate WHERE id = :id " ;
 
-    private static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payername as rh_payername,rh" +
-            ".payerAddress as rh_payerAddress, rh.payerEmail as rh_payerEmail, rh.payermobile as rh_payermobile, rh" +
-            ".paidBy as rh_paidBy, rh.referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,rh.receiptType as "
-            +
-            "rh_receiptType, rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate, rh.referenceDesc" +
-            " as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.fund as rh_fund, rh.function as rh_function, rh.department as rh_department,  rh.manualreceiptdate as "
-            +
-            "rh_manualreceiptdate, rh.businessDetails as rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location as "
-            +
-            "rh_location,  rh.isReconciled as rh_isReconciled,rh.status as rh_status,rh.reasonForCancellation as " +
-            "rh_reasonForCancellation , rh.minimumAmount as rh_minimumAmount,rh.totalAmount as rh_totalAmount, rh" +
-            ".collectedamount as rh_collectedamount, rh.collModesNotAllwd as rh_collModesNotAllwd,rh.consumerCode as " +
-            "rh_consumerCode,rh.function as rh_function,  rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as "
-            +
-            "rh_reference_ch_id,  rh.consumerType as rh_consumerType,rh.fund as rh_fund,rh.fundSource as " +
-            "rh_fundSource, rh.boundary as rh_boundary, rh.department as rh_department,rh.depositedBranch as " +
-            "rh_depositedBranch, rh.tenantId as rh_tenantId, rh.displayMsg as rh_displayMsg,rh.voucherheader as " +
-            "rh_voucherheader, rh.cancellationRemarks as rh_cancellationRemarks, rh.additionalDetails as " +
-            "rh_additionalDetails, rh.createdBy as  rh_createdBy, rh.createdDate as rh_createdDate,rh.lastModifiedBy " +
-            "as rh_lastModifiedBy, rh.lastModifiedDate as " +
-            "rh_lastModifiedDate, rh.demandid as rh_demandid, rh.demandFromDate as rh_demandfromdate, " + 
-            "rh.demandToDate as rh_demandtodate, rh.transactionid as rh_transactionid, rd.id as rd_id,  rd.amount as rd_amount, " +
-            "rd.adjustedamount as rd_adjustedamount, rd.ordernumber as " +
-            "rd_ordernumber,  rd.description as rd_description,rd" +
-            ".isActualDemand  as rd_isActualDemand,  rd.financialYear as rd_financialYear,rd.purpose as rd_purpose, " +
-            "rd.additionalDetails as rd_additionalDetails, rd.tenantId as rd_tenantId, rd.taxheadcode as rd_taxheadcode, "+
-            "rd.demanddetailid as rd_demanddetailid, ins.id as ins_instrumentheader, " +
-            "ins.amount as ins_amount, ins.transactionDate as ins_transactiondate, ins.transactionNumber as " +
-            "ins_transactionNumber, ins.instrumenttype as ins_instrumenttype, ins .instrumentstatus" +
-            " as ins_instrumentstatus,  ins.bankid as ins_bankid , ins.branchname as ins_branchname , ins" +
-            ".bankaccountid as ins_bankaccountid,  ins.ifsccode as ins_ifsccode , ins.financialstatus as " +
-            "ins_financialstatus ,  ins.transactiontype as ins_transactiontype , ins.payee as ins_payee , ins.drawer " +
-            "as ins_drawer ,  ins.surrenderreason as ins_surrenderreason , ins.serialno as ins_serialno , ins" +
-            ".additionalDetails as ins_additionalDetails, ins.createdby as ins_createdby ,  ins.createddate as ins_createddate , ins.lastmodifiedby as "
-            +
-            "ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid , " +
-            " ins.instrumentDate as ins_instrumentDate, ins.instrumentNumber as ins_instrumentNumber " +
-            "from egcl_receiptheader_v1 rh LEFT OUTER JOIN egcl_receiptdetails_v1 rd ON rh.id=rd.receiptheader " +
-            "LEFT OUTER JOIN egcl_receiptinstrument_v1 recins ON rh.id=recins.receiptheader " +
-            "LEFT JOIN egcl_instrumentheader_v1 ins ON recins.instrumentheader=ins.id ";
+    private static final String SELECT_RECEIPTS_SQL = "Select rh.id as rh_id,rh.payername as \n" + 
+    		"rh_payername,rh.payerAddress as rh_payerAddress, rh.payerEmail as rh_payerEmail, rh.payermobile as rh_payermobile, \n" + 
+    		"rh.paidBy as rh_paidBy, rh.referenceNumber as rh_referenceNumber, rh.referenceDate as rh_referenceDate,\n" + 
+    		"rh.receiptType as rh_receiptType, rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate, \n" + 
+    		"rh.referenceDesc as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.fund as rh_fund, \n" + 
+    		"rh.function as rh_function, rh.department as rh_department,  rh.manualreceiptdate as rh_manualreceiptdate, \n" + 
+    		"rh.businessDetails as rh_businessDetails,  rh.collectionType as rh_collectionType,rh.stateId as rh_stateId,rh.location \n" + 
+    		"as rh_location,  rh.isReconciled as rh_isReconciled,rh.status as rh_status,rh.reasonForCancellation as \n" + 
+    		"rh_reasonForCancellation , rh.minimumAmount as rh_minimumAmount,rh.totalAmount as rh_totalAmount, rh.collectedamount \n" + 
+    		"as rh_collectedamount, rh.collModesNotAllwd as rh_collModesNotAllwd,rh.consumerCode as rh_consumerCode,rh.function as rh_function,  "
+    		+ "rh.version as rh_version,rh.channel as rh_channel,rh.reference_ch_id as rh_reference_ch_id,  rh.consumerType as rh_consumerType, "
+    		+ "rh.fund as rh_fund,rh.fundSource \n" + 
+    		"as rh_fundSource, rh.boundary as rh_boundary, rh.department as rh_department,rh.depositedBranch as rh_depositedBranch, rh.tenantId as rh_tenantId, "
+    		+ "rh.displayMsg as rh_displayMsg,rh.voucherheader as rh_voucherheader, rh.cancellationRemarks as rh_cancellationRemarks, rh.additionalDetails as rh_additionalDetails, "
+    		+ "rh.createdBy as  rh_createdBy, rh.createdDate as rh_createdDate,rh.lastModifiedBy as rh_lastModifiedBy, rh.lastModifiedDate as rh_lastModifiedDate, "
+    		+ "rh.demandid as rh_demandid, rh.demandFromDate \n" + 
+    		"as rh_demandfromdate, rh.demandToDate as rh_demandtodate, rh.transactionid as rh_transactionid, rd.id as rd_id,  rd.amount as rd_amount, rd.adjustedamount as rd_adjustedamount, rd.ordernumber as rd_ordernumber,  rd.description as rd_description,rd.isActualDemand  as rd_isActualDemand,  rd.financialYear as rd_financialYear,rd.purpose as rd_purpose, rd.additionalDetails as rd_additionalDetails, rd.tenantId \n" + 
+    		"as rd_tenantId, rd.taxheadcode as rd_taxheadcode, rd.demanddetailid as rd_demanddetailid, ins.id as ins_instrumentheader, ins.amount"
+    		+ " as ins_amount, ins.transactionDate as ins_transactiondate, ins.transactionNumber as ins_transactionNumber, ins.instrumenttype as ins_instrumenttype, "
+    		+ "ins .instrumentstatus as ins_instrumentstatus,  ins.bankid as ins_bankid , ins.branchname as ins_branchname , ins.bankaccountid \n" + 
+    		"as ins_bankaccountid,  ins.ifsccode as ins_ifsccode , ins.financialstatus as ins_financialstatus ,  ins.transactiontype as ins_transactiontype , "
+    		+ "ins.payee as ins_payee , ins.drawer as ins_drawer ,  ins.surrenderreason as ins_surrenderreason , ins.serialno as ins_serialno , "
+    		+ "ins.additionalDetails as ins_additionalDetails, ins.createdby as ins_createdby ,  ins.createddate as ins_createddate , ins.lastmodifiedby \n" + 
+    		"as ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid ,  ins.instrumentDate as ins_instrumentDate, "
+    		+ "ins.instrumentNumber as ins_instrumentNumber \n" + 
+    		"\n" + 
+    		"from egcl_receiptheader_v1 rh INNER JOIN egcl_receiptdetails_v1 rd ON rh.id=rd.receiptheader INNER JOIN egcl_receiptinstrument_v1 recins ON rh.id=recins.receiptheader "
+    		+ "INNER JOIN egcl_instrumentheader_v1 ins ON recins.instrumentheader=ins.id ";
 
     private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY rh_id) offset_ FROM " +
@@ -503,16 +491,13 @@ public class CollectionsQueryBuilder {
 
     private static String addPaginationClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
             ReceiptSearchCriteria criteria) {
-
-        if (criteria.getLimit()!=null && criteria.getLimit() != 0) {
-            String finalQuery = PAGINATION_WRAPPER.replace("{baseQuery}", selectQuery);
+    	String finalQuery = addOrderByClause(selectQuery.toString(), criteria);
+        if (criteria.getLimit() != null && criteria.getOffset() != null) {
+            finalQuery = finalQuery + " LIMIT :limit OFFSET :offset";
             preparedStatementValues.put("offset", criteria.getOffset());
             preparedStatementValues.put("limit", criteria.getOffset() + criteria.getLimit());
-
-            return addOrderByClause(finalQuery, criteria);
-
-        } else
-            return addOrderByClause(selectQuery.toString(), criteria);
+        } 
+        return finalQuery;
     }
 
     private static PGobject getJsonb(JsonNode node) {

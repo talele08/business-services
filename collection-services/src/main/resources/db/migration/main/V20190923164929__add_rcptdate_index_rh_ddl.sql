@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_rcpthd_v1_receiptdate ON public.egcl_receiptheader_v1 USING btree (receiptdate);
