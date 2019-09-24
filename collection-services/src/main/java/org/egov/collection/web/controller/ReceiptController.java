@@ -99,7 +99,6 @@ public class ReceiptController {
 			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
 
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
 		// Only do this if there is no receipt number search
 		// Only do this when search ignore status has been defined in
 		// application.properties
