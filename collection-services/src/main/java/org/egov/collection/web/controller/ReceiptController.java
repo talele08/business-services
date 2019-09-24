@@ -99,11 +99,12 @@ public class ReceiptController {
 			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
 
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		// Only do this if there is no receipt number search
-		// Only do this when search ignore status has been defined in
-		// application.properties
-		// Only do this when status has not been already provided for the search
-		if ((receiptSearchCriteria.getReceiptNumbers() == null || receiptSearchCriteria.getReceiptNumbers().isEmpty())
+		/* Only do this if there is no receipt number search
+		 Only do this when search ignore status has been defined in
+		 application.properties
+		 Only do this when status has not been already provided for the search */
+		
+/*		if ((receiptSearchCriteria.getReceiptNumbers() == null || receiptSearchCriteria.getReceiptNumbers().isEmpty())
 				&& !searchIgnoreStatus.isEmpty()
 				&& (receiptSearchCriteria.getStatus() == null || receiptSearchCriteria.getStatus().isEmpty())) {
 			// Do not return ignored status for receipts by default
@@ -115,7 +116,7 @@ public class ReceiptController {
 			}
 
 			receiptSearchCriteria.setStatus(defaultStatus);
-		}
+		}*/
 
 		List<Receipt> receipts = collectionService.getReceipts(requestInfo, receiptSearchCriteria);
 

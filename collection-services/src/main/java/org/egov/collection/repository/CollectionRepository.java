@@ -139,6 +139,7 @@ public class CollectionRepository {
 
     public List<Receipt> fetchReceipts(ReceiptSearchCriteria receiptSearchCriteria){
         Map<String, Object> preparedStatementValues = new HashMap<>();
+        log.info("receiptSearchCriteria: "+receiptSearchCriteria);
         String query = CollectionsQueryBuilder.getReceiptSearchQuery(receiptSearchCriteria, preparedStatementValues);
         log.debug(query);
         List<Receipt> receipts = namedParameterJdbcTemplate.query(query, preparedStatementValues,
