@@ -15,6 +15,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class WorkflowService {
     public List<Receipt> performWorkflow(ReceiptWorkflowRequest receiptWorkflowRequest){
 
         // Basic validations
-
+        setReceiptWorkflowBasedOnReceiptNumber(receiptWorkflowRequest);
         ReceiptWorkflow.ReceiptAction action = receiptWorkflowRequest.getReceiptWorkflow().get(0).getAction();
         String tenantId = receiptWorkflowRequest.getReceiptWorkflow().get(0).getTenantId();
 
@@ -293,5 +294,45 @@ public class WorkflowService {
         receipt.getInstrument().getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
         receipt.getInstrument().getAuditDetails().setLastModifiedDate(System.currentTimeMillis());
     }
+
+
+    /**
+     * Creates ReceiptWorkflow for receiptNumbers corresponding to transactionNumber and sets it to ReceiptWorkflowRequest
+     * @param receiptWorkflowRequest
+     */
+    public void setReceiptWorkflowBasedOnReceiptNumber(ReceiptWorkflowRequest receiptWorkflowRequest){
+        List<ReceiptWorkflow> receiptWorkflowsBasedOnReceiptNumber = new LinkedList<>();
+        List<ReceiptWorkflow> receiptWorkflows = receiptWorkflowRequest.getReceiptWorkflow();
+        Map<String,String> errorMap = new HashMap<>();
+
+        receiptWorkflows.forEach(receiptWorkflow -> {
+            ReceiptSearchCriteria receiptSearchCriteria = ReceiptSearchCriteria
+                    .builder()
+                    .transactionId(receiptWorkflow.getTransactionNumber())
+                    .tenantId(receiptWorkflow.getTenantId())
+                    .build();
+            List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
+
+            if(!CollectionUtils.isEmpty(receipts)) {
+                receipts.forEach(receipt -> {
+                    ReceiptWorkflow receiptWorkflowBasedOnReceiptNumber =  ReceiptWorkflow.builder()
+                            .tenantId(receiptWorkflow.getTenantId())
+                            .receiptNumber(receipt.getReceiptNumber())
+                            .action(receiptWorkflow.getAction())
+                            .additionalDetails(receiptWorkflow.getAdditionalDetails())
+                            .reason(receiptWorkflow.getReason())
+                            .build();
+                    receiptWorkflowsBasedOnReceiptNumber.add(receiptWorkflowBasedOnReceiptNumber);
+                    });
+            }
+            else
+                errorMap.put("INVALID_TRANSACTIONNUMBER","No receipt found for the transaction number: "+receiptWorkflow.getTransactionNumber());
+        });
+        if(!errorMap.isEmpty())
+            throw new CustomException(errorMap);
+
+        receiptWorkflowRequest.setReceiptWorkflow(receiptWorkflowsBasedOnReceiptNumber);
+    }
+
 
 }

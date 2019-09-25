@@ -3,17 +3,21 @@ package org.egov.collection.web.contract;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
 @Data
+@Builder
 public class ReceiptWorkflow {
+
+    private String receiptNumber;
 
     @NotNull
     @Length(min = 1)
-    private String receiptNumber;
+    private String transactionNumber;
 
     @NotNull
     private ReceiptAction action;
