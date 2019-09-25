@@ -92,8 +92,8 @@ public class CollectionsQueryBuilder {
     		"as ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid ,  ins.instrumentDate as ins_instrumentDate, "
     		+ "ins.instrumentNumber as ins_instrumentNumber \n" + 
     		"\n" + 
-    		"from egcl_receiptheader_v1 rh LEFT JOIN egcl_receiptdetails_v1 rd ON rh.id=rd.receiptheader LEFT JOIN egcl_receiptinstrument_v1 recins ON rh.id=recins.receiptheader "
-    		+ "LEFT JOIN egcl_instrumentheader_v1 ins ON recins.instrumentheader=ins.id ";
+    		"from egcl_receiptheader_v1 rh LEFT OUTER JOIN egcl_receiptdetails_v1 rd ON rh.id=rd.receiptheader LEFT OUTER JOIN egcl_receiptinstrument_v1 recins ON rh.id=recins.receiptheader "
+    		+ "LEFT OUTER JOIN egcl_instrumentheader_v1 ins ON recins.instrumentheader=ins.id ";
 
     private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY rh_id) offset_ FROM " +
