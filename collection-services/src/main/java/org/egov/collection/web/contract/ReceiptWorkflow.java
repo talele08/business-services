@@ -3,14 +3,18 @@ package org.egov.collection.web.contract;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReceiptWorkflow {
 
     private String receiptNumber;
