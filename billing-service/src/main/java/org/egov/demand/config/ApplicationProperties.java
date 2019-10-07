@@ -228,6 +228,14 @@ public class ApplicationProperties {
 	@Value("#{${bs.businesscode.demand.updateurl}}")
 	private Map<String, String> businessCodeAndDemandUpdateUrlMap;
 	
+	// V2
+	
+	@Value("${kafka.topics.receipt.update.demand.v2}")
+	private String updateDemandFromReceiptV2;
+	
+	@Value("${kafka.topics.receipt.cancel.name.v2}")
+	private String receiptCancellationTopicV2;
+	
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}

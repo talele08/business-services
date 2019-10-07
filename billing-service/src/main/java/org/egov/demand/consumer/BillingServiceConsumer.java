@@ -10,10 +10,12 @@ import org.egov.demand.model.BillDetail.StatusEnum;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.service.ReceiptService;
+import org.egov.demand.service.ReceiptServiceV2;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.Receipt;
 import org.egov.demand.web.contract.ReceiptRequest;
+import org.egov.demand.web.contract.ReceiptRequestV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -42,11 +44,15 @@ public class BillingServiceConsumer {
 
 	@Autowired
 	private ReceiptService receiptService;
+	
+	@Autowired
+	private ReceiptServiceV2 receiptServiceV2;
 
 
 	@KafkaListener(topics = { "${kafka.topics.receipt.update.collecteReceipt}", "${kafka.topics.save.bill}",
 			"${kafka.topics.save.demand}", "${kafka.topics.update.demand}", "${kafka.topics.receipt.update.demand}",
-			"${kafka.topics.receipt.cancel.name}" })
+			"${kafka.topics.receipt.cancel.name}", "${kafka.topics.receipt.update.demand.v2}",
+			"${kafka.topics.receipt.cancel.name.v2}" })
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
@@ -92,6 +98,24 @@ public class BillingServiceConsumer {
 		else if (applicationProperties.getReceiptCancellationTopic().equals(topic)) {
 			receiptService.updateDemandFromReceipt(objectMapper.convertValue(consumerRecord, ReceiptRequest.class),
 					StatusEnum.CANCELLED, true);
+		}
+
+		/*
+		 * update demand from receipt
+		 */
+		else if (applicationProperties.getUpdateDemandFromReceiptV2().equals(topic)) {
+
+			ReceiptRequestV2 receiptRequest = objectMapper.convertValue(consumerRecord, ReceiptRequestV2.class);
+			receiptServiceV2.updateDemandFromReceipt(receiptRequest, org.egov.demand.model.BillV2.StatusEnum.PAID,
+					false);
+		}
+
+		/*
+		 * update demand for receipt cancellation
+		 */
+		else if (applicationProperties.getReceiptCancellationTopicV2().equals(topic)) {
+			receiptServiceV2.updateDemandFromReceipt(objectMapper.convertValue(consumerRecord, ReceiptRequestV2.class),
+					org.egov.demand.model.BillV2.StatusEnum.CANCELLED, true);
 		}
 	}
 }
