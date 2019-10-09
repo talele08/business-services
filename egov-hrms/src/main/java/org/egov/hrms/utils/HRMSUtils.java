@@ -25,13 +25,17 @@ public class HRMSUtils {
 	 */
 	public String generatePassword(List<String> params) {
 		StringBuilder password = new StringBuilder();
+		//list params in the input will always have small chars and nos. 
+		params.add("EGOVERNMENTS"); //including capitals.
+		params.add("@#$%"); // including sp characters
+		//thus, pwd rule is followed.
 		Random random = new Random();
 		try {
 			for(int i = 0; i < params.size(); i++) {
 				String param = params.get(i);
 				String val = param.split("")[random.nextInt(param.length() - 1)];
 				if(val.equals(".") || val.equals("-"))
-					password.append("x");
+					password.append("@");
 				else
 					password.append(val);
 				if(password.length() == pwdLength)
@@ -42,7 +46,7 @@ public class HRMSUtils {
 				}
 			}
 		}catch(Exception e) {
-			password.append("123456");
+			password.append("P@ssw0rd");
 		}
 
 		return password.toString().replaceAll("\\s+", "");
