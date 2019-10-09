@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorResponse;
-import org.egov.demand.helper.BillHelperv2;
+import org.egov.demand.helper.BillHelperV2;
 import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.service.BillServicev2;
@@ -38,7 +38,7 @@ public class BillControllerv2 {
 	private ResponseFactory responseFactory;
 	
 	@Autowired
-	private BillHelperv2 billHelper;
+	private BillHelperV2 billHelper;
 	
 	@PostMapping("_search")
 	@ResponseBody

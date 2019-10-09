@@ -121,7 +121,7 @@ public class BillRepositoryV2 {
 
 				ps.setString(1, billDetail.getId());
 				ps.setString(2, billDetail.getTenantId());
-				ps.setString(3, billDetail.getBill());
+				ps.setString(3, billDetail.getBillId());
 				ps.setString(4, billDetail.getDemandId());
 				ps.setLong(5, billDetail.getFromPeriod());
 				ps.setLong(6, billDetail.getToPeriod());
@@ -170,7 +170,7 @@ public class BillRepositoryV2 {
 
 				ps.setString(1, billAccountDetail.getId());
 				ps.setString(2, billAccountDetail.getTenantId());
-				ps.setString(3, billAccountDetail.getBillDetail());
+				ps.setString(3, billAccountDetail.getBillDetailId());
 				ps.setString(4, billAccountDetail.getDemandDetailId());
 				ps.setObject(5, billAccountDetail.getOrder());
 				ps.setBigDecimal(6, billAccountDetail.getAmount());

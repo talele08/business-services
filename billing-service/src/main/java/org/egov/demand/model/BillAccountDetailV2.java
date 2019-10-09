@@ -21,8 +21,8 @@ public class BillAccountDetailV2   {
   @JsonProperty("tenantId")
   private String tenantId;
 
-  @JsonProperty("billDetail")
-  private String billDetail;
+  @JsonProperty("billDetailId")
+  private String billDetailId;
 
   @JsonProperty("demandDetailId")
   private String demandDetailId;

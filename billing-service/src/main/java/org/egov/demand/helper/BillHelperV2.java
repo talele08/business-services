@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BillHelperv2 {
+public class BillHelperV2 {
 	
 	@Autowired
 	private SequenceGenService sequenceGenService;
@@ -56,13 +56,13 @@ public class BillHelperv2 {
 
 			for (BillDetailV2 billDetail : billDetails) {
 				billDetail.setId(billDetailIds.get(billDetailIndex++));
-				billDetail.setBill(bill.getId());
+				billDetail.setBillId(bill.getId());
 				billDetail.setTenantId(bill.getTenantId());
 				List<BillAccountDetailV2> accountDetails = billDetail.getBillAccountDetails();
 
 				for (BillAccountDetailV2 billAccountDetail : accountDetails) {
 					billAccountDetail.setId(billAccIds.get(billAccIndex++));
-					billAccountDetail.setBillDetail(billDetail.getId());
+					billAccountDetail.setBillDetailId(billDetail.getId());
 					billAccountDetail.setTenantId(billDetail.getTenantId());
 				}
 

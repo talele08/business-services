@@ -27,8 +27,8 @@ public class BillDetailV2 {
 	@JsonProperty("demandId")
 	private String demandId;
 
-	@JsonProperty("bill")
-	private String bill;
+	@JsonProperty("billId")
+	private String billId;
 
 	@JsonProperty("expiryDate")
 	private Long expiryDate;

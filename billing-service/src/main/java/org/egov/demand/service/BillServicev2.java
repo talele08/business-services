@@ -326,7 +326,7 @@ public class BillServicev2 {
 				minimumAmtPayableForBill = minimumAmtPayableForBill.add(demand.getMinimumAmountPayable());
 				String billDetailId = UUID.randomUUID().toString();
 				BillDetailV2 billDetail = getBillDetailForDemand(demand, taxHeadMap, billDetailId);
-				billDetail.setBill(billId);
+				billDetail.setBillId(billId);
 				billDetail.setId(billDetailId);
 				billDetails.add(billDetail);
 				billAmount = billAmount.add(billDetail.getAmount());
@@ -476,7 +476,7 @@ public class BillServicev2 {
 					.taxHeadCode(taxHead.getCode())
 					.amount(newAmountForAccDeatil)
 					.order(taxHead.getOrder())
-					.billDetail(billDetailId)
+					.billDetailId(billDetailId)
 					.build();
 		
 			taxCodeAccDetailMap.put(taxHead.getCode(), accountDetail);

@@ -73,7 +73,7 @@ public class BillRowMapperV2 implements ResultSetExtractor<List<BillV2>>{
 				billDetail = BillDetailV2.builder()
 					.id(detailId)
 					.tenantId(rs.getString("bd_tenantid"))
-					.bill(rs.getString("bd_billid"))
+					.billId(rs.getString("bd_billid"))
 					.demandId(rs.getString("demandid"))
 					.fromPeriod(rs.getLong("fromperiod"))
 					.toPeriod(rs.getLong("toperiod"))
@@ -83,7 +83,7 @@ public class BillRowMapperV2 implements ResultSetExtractor<List<BillV2>>{
 
 				billDetailMap.put(billDetail.getId(), billDetail);
 
-				if (bill.getId().equals(billDetail.getBill())) {
+				if (bill.getId().equals(billDetail.getBillId())) {
 					bill.addBillDetailsItem(billDetail);
 					bill.setTotalAmount(bill.getTotalAmount().add(billDetail.getAmount()));
 				}
@@ -92,7 +92,7 @@ public class BillRowMapperV2 implements ResultSetExtractor<List<BillV2>>{
 			BillAccountDetailV2 billAccDetail = BillAccountDetailV2.builder()
 				.id(rs.getString("ad_id"))
 				.tenantId(rs.getString("ad_tenantid"))
-				.billDetail(rs.getString("ad_billdetail"))
+				.billDetailId(rs.getString("ad_billdetail"))
 				.order(rs.getInt("ad_orderno"))
 				.amount(rs.getBigDecimal("ad_amount"))
 				.adjustedAmount(rs.getBigDecimal("ad_adjustedamount"))
@@ -100,7 +100,7 @@ public class BillRowMapperV2 implements ResultSetExtractor<List<BillV2>>{
 				.demandDetailId(rs.getString("demanddetailid"))
 				.build();
 
-			if (billDetail.getId().equals(billAccDetail.getBillDetail()))
+			if (billDetail.getId().equals(billAccDetail.getBillDetailId()))
 				billDetail.addBillAccountDetailsItem(billAccDetail);
 
 		}
