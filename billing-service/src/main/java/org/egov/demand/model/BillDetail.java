@@ -26,122 +26,122 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BillDetail {
+public class BillDetail   {
+	
+        @JsonProperty("id")
+        private String id;
 
-	@JsonProperty("id")
-	private String id;
+        @JsonProperty("tenantId")
+        private String tenantId;
 
-	@JsonProperty("tenantId")
-	private String tenantId;
+        @JsonProperty("demandId")
+        private String demandId;
 
-	@JsonProperty("demandId")
-	private String demandId;
+        @JsonProperty("bill")
+        private String bill;
 
-	@JsonProperty("bill")
-	private String bill;
+        @JsonProperty("businessService")
+        private String businessService;
 
-	@JsonProperty("businessService")
-	private String businessService;
+        @JsonProperty("billNumber")
+        private String billNumber;
 
-	@JsonProperty("billNumber")
-	private String billNumber;
+        @JsonProperty("billDate")
+        private Long billDate;
 
-	@JsonProperty("billDate")
-	private Long billDate;
+        @JsonProperty("consumerCode")
+        private String consumerCode;
 
-	@JsonProperty("consumerCode")
-	private String consumerCode;
+        @JsonProperty("consumerType")
+        private String consumerType;
+        
+        @JsonProperty("expiryDate")
+        private Long expiryDate;
 
-	@JsonProperty("consumerType")
-	private String consumerType;
+        @JsonProperty("minimumAmount")
+        private BigDecimal minimumAmount;
 
-	@JsonProperty("expiryDate")
-	private Long expiryDate;
+        @JsonProperty("totalAmount")
+        private BigDecimal totalAmount;
 
-	@JsonProperty("minimumAmount")
-	private BigDecimal minimumAmount;
+        @JsonProperty("fromPeriod")
+        private Long fromPeriod;
 
-	@JsonProperty("totalAmount")
-	private BigDecimal totalAmount;
+        @JsonProperty("toPeriod")
+        private Long toPeriod;
 
-	@JsonProperty("fromPeriod")
-	private Long fromPeriod;
+        @JsonProperty("collectedAmount")
+        private BigDecimal collectedAmount;
 
-	@JsonProperty("toPeriod")
-	private Long toPeriod;
+        @JsonProperty("collectionModesNotAllowed")
+        @Valid
+        private List<String> collectionModesNotAllowed;
 
-	@JsonProperty("collectedAmount")
-	private BigDecimal collectedAmount;
+        @JsonProperty("partPaymentAllowed")
+        private Boolean partPaymentAllowed;
+        
+        @JsonProperty("isAdvanceAllowed")
+        private Boolean isAdvanceAllowed;
 
-	@JsonProperty("collectionModesNotAllowed")
-	@Valid
-	private List<String> collectionModesNotAllowed;
+        @JsonProperty("additionalDetails")
+        private Object additionalDetails;
 
-	@JsonProperty("partPaymentAllowed")
-	private Boolean partPaymentAllowed;
+        @JsonProperty("billAccountDetails")
+        @Valid
+        @Default
+        private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
-	@JsonProperty("isAdvanceAllowed")
-	private Boolean isAdvanceAllowed;
+              /**
+   * status if the bill detail
+   */
+  public enum StatusEnum {
+    CREATED("CREATED"),
+    
+    CANCELLED("CANCELLED"),
+    
+    INSTRUMENT_BOUNCED("INSTRUMENT_BOUNCED");
 
-	@JsonProperty("additionalDetails")
-	private Object additionalDetails;
+    private String value;
 
-	@JsonProperty("billAccountDetails")
-	@Valid
-	@Default
-	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
+    StatusEnum(String value) {
+      this.value = value;
+    }
 
-	/**
-	 * status if the bill detail
-	 */
-	public enum StatusEnum {
-		CREATED("CREATED"),
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
 
-		CANCELLED("CANCELLED"),
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
 
-		INSTRUMENT_BOUNCED("INSTRUMENT_BOUNCED");
+        @JsonProperty("status")
+        private StatusEnum status;
 
-		private String value;
 
-		StatusEnum(String value) {
-			this.value = value;
-		}
+        public BillDetail addCollectionModesNotAllowedItem(String collectionModesNotAllowedItem) {
+            if (this.collectionModesNotAllowed == null) {
+            this.collectionModesNotAllowed = new ArrayList<>();
+            }
+        this.collectionModesNotAllowed.add(collectionModesNotAllowedItem);
+        return this;
+        }
 
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static StatusEnum fromValue(String text) {
-			for (StatusEnum b : StatusEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
-	@JsonProperty("status")
-	private StatusEnum status;
-
-	public BillDetail addCollectionModesNotAllowedItem(String collectionModesNotAllowedItem) {
-		if (this.collectionModesNotAllowed == null) {
-			this.collectionModesNotAllowed = new ArrayList<>();
-		}
-		this.collectionModesNotAllowed.add(collectionModesNotAllowedItem);
-		return this;
-	}
-
-	public BillDetail addBillAccountDetailsItem(BillAccountDetail billAccountDetailsItem) {
-		if (this.billAccountDetails == null) {
-			this.billAccountDetails = new ArrayList<>();
-		}
-		if (!this.billAccountDetails.contains(billAccountDetailsItem))
-			this.billAccountDetails.add(billAccountDetailsItem);
-		return this;
-	}
+        public BillDetail addBillAccountDetailsItem(BillAccountDetail billAccountDetailsItem) {
+            if (this.billAccountDetails == null) {
+            this.billAccountDetails = new ArrayList<>();
+            }
+        this.billAccountDetails.add(billAccountDetailsItem);
+        return this;
+        }
 
 }

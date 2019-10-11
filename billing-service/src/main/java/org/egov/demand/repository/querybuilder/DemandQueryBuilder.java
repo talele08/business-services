@@ -133,9 +133,6 @@ public class DemandQueryBuilder {
 		
 		query.append("dmd.tenantid=? ");
 		preparedStmtList.add(tenantId);
-		
-		query.append("AND dmd.status='ACTIVE' ");
-		
 		boolean orFlag = false;
 		for (Entry<String, Set<String>> consumerCode : businessConsumercodeMap.entrySet()) {
 			
@@ -165,13 +162,6 @@ public class DemandQueryBuilder {
 		demandQuery.append("dmd.tenantid=?");
 		preparedStatementValues.add(demandCriteria.getTenantId());
 
-		if (demandCriteria.getStatus() != null) {
-
-			addAndClause(demandQuery);
-			demandQuery.append("dmd.status=?");
-			preparedStatementValues.add(demandCriteria.getStatus());
-		}
-		
 		if (demandCriteria.getDemandId() != null && !demandCriteria.getDemandId().isEmpty()) {
 			addAndClause(demandQuery);
 			demandQuery.append("dmd.id IN (" + getIdQueryForStrings(demandCriteria.getDemandId()));
@@ -185,18 +175,6 @@ public class DemandQueryBuilder {
 			demandQuery.append("dmd.businessservice=?");
 			preparedStatementValues.add(demandCriteria.getBusinessService());
 		}
-		
-		if (demandCriteria.getPeriodFrom() != null) {
-			addAndClause(demandQuery);
-			demandQuery.append("dmd.taxPeriodFrom >= ?");
-			preparedStatementValues.add(demandCriteria.getPeriodFrom());
-		}
-		if(demandCriteria.getPeriodTo() != null){
-			addAndClause(demandQuery);
-			demandQuery.append("dmd.taxPeriodTo <= ?");
-			preparedStatementValues.add(demandCriteria.getPeriodTo());
-		}
-		
 		if (demandCriteria.getConsumerCode() != null && !demandCriteria.getConsumerCode().isEmpty()) {
 			addAndClause(demandQuery);
 			demandQuery.append("dmd.consumercode IN ("

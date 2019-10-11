@@ -1,8 +1,6 @@
 package org.egov.demand.service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -106,9 +104,8 @@ public class ReceiptService {
 			 */ 
 			if(null == billAccDetail.getTaxHeadCode()) return;
 			
+			
 			List<DemandDetail> currentDetails = taxHeadCodeDemandDetailgroup.get(billAccDetail.getTaxHeadCode());
-			Collections.sort(currentDetails, Comparator.comparing(DemandDetail::getTaxAmount));
-					
 			int length = 0;
 			
 			if (!CollectionUtils.isEmpty(currentDetails))
@@ -177,15 +174,17 @@ public class ReceiptService {
 	 * @param billAccDetail the bill account detail with the paid-amount/Adjusted amount
 	 * @param isRecieptCancellation to identify if the method call is for payment or cancellation
 	 */
-	private void updateMultipleDemandDetails(List<DemandDetail> demandDetails, BillAccountDetail billAccDetail,
-			Boolean isRecieptCancellation) {
+	private void updateMultipleDemandDetails (List<DemandDetail> demandDetails, BillAccountDetail billAccDetail, Boolean isRecieptCancellation) {
 
-		BigDecimal amtPaid = billAccDetail.getAdjustedAmount();
-
+		BigDecimal incomingAmount = billAccDetail.getAdjustedAmount();
+		Boolean isNegativeDetail = incomingAmount.compareTo(BigDecimal.ZERO) < 0;
+		
+		BigDecimal negatedIncomingAmout = isNegativeDetail ? incomingAmount.negate() : incomingAmount;
+		
 		if (!isRecieptCancellation)
-			updateDetailsForPayment(demandDetails, amtPaid);
+			updateDetailsForPayment(demandDetails, isNegativeDetail, negatedIncomingAmout);
 		else
-			updateDetailsForCancellation(demandDetails, amtPaid);
+			updateDetailsForCancellation(demandDetails, isNegativeDetail, negatedIncomingAmout);
 
 	}
 
@@ -194,13 +193,18 @@ public class ReceiptService {
 	 * 
 	 * @param demandDetails        List of details to be updated
 	 * 
-	 * @param amtPaid Adjusted amount from bill Acc detail
+	 * @param isNegativeDetail     boolean field to represent whether the demand
+	 *                             detail is greater than or lesser than zero
+	 * 
+	 * @param negatedIncomingAmout Adjusted amount from bill detail negated to be
+	 *                             positive if it was negative
 	 */
-	private void updateDetailsForCancellation(List<DemandDetail> demandDetails, BigDecimal amtPaid) {
+	private void updateDetailsForCancellation(List<DemandDetail> demandDetails, Boolean isNegativeDetail,
+			BigDecimal negatedIncomingAmout) {
 
 		for (DemandDetail detail : demandDetails) {
 
-			if (amtPaid.compareTo(BigDecimal.ZERO) == 0)
+			if (negatedIncomingAmout.compareTo(BigDecimal.ZERO) == 0)
 				return;
 
 			/*
@@ -208,67 +212,83 @@ public class ReceiptService {
 			 */
 			BigDecimal resultantCollectionAmt;
 
-			BigDecimal currentDetailCollectionAmt = detail.getCollectionAmount();
+			/*
+			 * Changing the collection amount to positive in case of negative demandDetail
+			 */
+			BigDecimal currentDetailCollectionAmt = isNegativeDetail ? detail.getCollectionAmount().negate()
+					: detail.getCollectionAmount();
 
-			if (currentDetailCollectionAmt.compareTo(amtPaid) >= 0) {
-
-				resultantCollectionAmt = currentDetailCollectionAmt.subtract(amtPaid);
-				amtPaid = BigDecimal.ZERO;
+			if (currentDetailCollectionAmt.compareTo(negatedIncomingAmout) >= 0) {
+				
+				resultantCollectionAmt = currentDetailCollectionAmt.subtract(negatedIncomingAmout);
+				negatedIncomingAmout = BigDecimal.ZERO;
 			} else {
 
 				resultantCollectionAmt = BigDecimal.ZERO;
-				amtPaid = amtPaid.subtract(currentDetailCollectionAmt);
+				negatedIncomingAmout = negatedIncomingAmout.subtract(currentDetailCollectionAmt);
 			}
+
+			/* Changing the sign of result amount for negative demand details */
+			resultantCollectionAmt = isNegativeDetail ? resultantCollectionAmt.negate() : resultantCollectionAmt;
 
 			detail.setCollectionAmount(resultantCollectionAmt);
 		}
 	}
 
 	/**
-	 * Method to handle payment in case of multiple Demand details present for a
-	 * single billAccountDetail
+	 *  Method to handle payment in case of multiple Demand details present for a single billAccountDetail
 	 * 
-	 * @param demandDetails    List of details to be updated
+	 * @param demandDetails        List of details to be updated
 	 * 
-	 * @param amountPaid       Adjusted amount from bill Acc detail
+	 * @param isNegativeDetail     boolean field to represent whether the demand
+	 *                             detail is greater than or lesser than zero
+	 *                             
+	 * @param negatedIncomingAmout Adjusted amount from bill detail negated to be
+	 *                             positive if it was negative
 	 */
-	private void updateDetailsForPayment(List<DemandDetail> demandDetails, BigDecimal amountPaid) {
+	private void updateDetailsForPayment(List<DemandDetail> demandDetails, Boolean isNegativeDetail,
+			BigDecimal negatedIncomingAmout) {
 
 		for (DemandDetail detail : demandDetails) {
-			
-			if (amountPaid.compareTo(BigDecimal.ZERO) == 0)
+
+			if (negatedIncomingAmout.compareTo(BigDecimal.ZERO) == 0)
 				return;
 
-			if(detail.getTaxAmount().compareTo(detail.getCollectionAmount()) == 0 || detail.getTaxAmount().compareTo(BigDecimal.ZERO) == 0)
-				continue;
 			/*
 			 * amount to be set in collectionAmount field of demandDetail after adjustments
 			 */
 			BigDecimal resultantCollectionAmt;
 
-			BigDecimal currentDetailTax = detail.getTaxAmount();
-			BigDecimal currentDetailCollection = detail.getCollectionAmount();
+			/* Changing the tax values to positive in case of negative demandDetail */
+			BigDecimal currentDetailTaxAmount = isNegativeDetail ? detail.getTaxAmount().negate()
+					: detail.getTaxAmount();
+			BigDecimal currentDetailCollectionAmt = isNegativeDetail ? detail.getCollectionAmount().negate()
+					: detail.getCollectionAmount();
 
-			BigDecimal currentDetailTaxCollectionDifference = currentDetailTax.subtract(currentDetailCollection);
+			BigDecimal currentDetailTaxCollectionDifference = currentDetailTaxAmount
+					.subtract(currentDetailCollectionAmt);
 
 			/*
 			 * if current demandDetail difference is lesser than incoming amount of
 			 * 
 			 * BillAccountDetail, then add the whole value to result
 			 */
-			if (currentDetailTaxCollectionDifference.compareTo(amountPaid) >= 0) {
+			if (currentDetailTaxCollectionDifference.compareTo(negatedIncomingAmout) >= 0) {
 
-				resultantCollectionAmt = currentDetailCollection.add(amountPaid);
-				amountPaid = BigDecimal.ZERO;
+				resultantCollectionAmt = currentDetailCollectionAmt.add(negatedIncomingAmout);
+				negatedIncomingAmout = BigDecimal.ZERO;
 			} else {
 				/*
 				 * if difference of demandDetail is lesser than Incoming amount, then add the
 				 * 
 				 * difference to resulantAmount and subtract the same from incoming amount
 				 */
-				resultantCollectionAmt = currentDetailCollection.add(currentDetailTaxCollectionDifference);
-				amountPaid = amountPaid.subtract(currentDetailTaxCollectionDifference);
+				resultantCollectionAmt = currentDetailCollectionAmt.add(currentDetailTaxCollectionDifference);
+				negatedIncomingAmout = negatedIncomingAmout.subtract(currentDetailTaxCollectionDifference);
 			}
+
+			/* Changing the sign of result amount for negative demand details */
+			resultantCollectionAmt = isNegativeDetail ? resultantCollectionAmt.negate() : resultantCollectionAmt;
 
 			detail.setCollectionAmount(resultantCollectionAmt);
 		}

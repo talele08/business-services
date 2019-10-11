@@ -69,10 +69,8 @@ import org.egov.demand.web.contract.User;
 import org.egov.demand.web.contract.UserResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.tracer.http.HttpUtils;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -106,7 +104,7 @@ public class DemandValidatorV1 {
 	 * 
 	 * @param demandRequest 
 	 */
-	public void validatedemandForCreate(DemandRequest demandRequest, Boolean isCreate, HttpHeaders headers) {
+	public void validatedemandForCreate(DemandRequest demandRequest, Boolean isCreate) {
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
@@ -173,12 +171,11 @@ public class DemandValidatorV1 {
 			if (!businessServiceCodes.contains(demand.getBusinessService()))
 				businessServicesNotFound.add(demand.getBusinessService());
 
-			if (!CollectionUtils.isEmpty(taxHeadMap))
-				details.forEach(detail -> {
+			details.forEach(detail -> {
 
-					if (!taxHeadMap.containsKey(detail.getTaxHeadMasterCode()))
-						taxHeadsNotFound.add(detail.getTaxHeadMasterCode());
-				});
+				if (!taxHeadMap.containsKey(detail.getTaxHeadMasterCode()))
+					taxHeadsNotFound.add(detail.getTaxHeadMasterCode());
+			});
 
 			validateTaxPeriod(taxPeriodBusinessMap, demand, errorMap, businessServicesWithNoTaxPeriods);
 		}
@@ -454,7 +451,7 @@ public class DemandValidatorV1 {
 	 * @param demandRequest
 	 * @param errorMap
 	 */
-	public void validateForUpdate(DemandRequest demandRequest, HttpHeaders headers) {
+	public void validateForUpdate(DemandRequest demandRequest) {
 
 		Map<String, String> errorMap = new HashMap<>();
 		List<Demand> demands = demandRequest.getDemands();
@@ -492,7 +489,7 @@ public class DemandValidatorV1 {
 		 * 
 		 * error map will be thrown in the create method itself
 		 */
-		validatedemandForCreate(demandRequest, false, headers);
+		validatedemandForCreate(demandRequest, false);
 	}
 	
 	/**
