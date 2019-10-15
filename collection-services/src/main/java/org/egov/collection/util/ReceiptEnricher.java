@@ -111,14 +111,14 @@ public class ReceiptEnricher {
             throw new CustomException("INVALID_BILL_ID", "Bill ID provided does not exist or is in an invalid state");
         }
 
-        if (validatedBills.get(0).getBillDetails().size() != billFromRequest.getBillDetails().size()) {
+/*        if (validatedBills.get(0).getBillDetails().size() != billFromRequest.getBillDetails().size()) {
             log.error("Mismatch in bill details records provided in request and actual bill. Expected {} billdetails " +
                     "found {} in request", billFromRequest.getBillDetails().size(), validatedBills.get(0)
                     .getBillDetails().size());
             throw new CustomException("INVALID_BILL_DETAILS", "Mismatch in bill detail records provided in request " +
                     "and actual bill");
 
-		}
+		}*/
 
 		Long expiryDate = validatedBills.get(0).getBillDetails().get(0).getExpiryDate();
 		if (isNull(expiryDate) || System.currentTimeMillis() >= expiryDate) {
@@ -137,7 +137,7 @@ public class ReceiptEnricher {
         validateTaxAndPayment(billFromRequest, validatedBill);
 
         for (int i = 0; i < validatedBill.getBillDetails().size(); i++) {
-            validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid());
+            //validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid());
 
             validatedBill.getBillDetails().get(i).setManualReceiptNumber(billFromRequest.getBillDetails().get(i)
                     .getManualReceiptNumber());
