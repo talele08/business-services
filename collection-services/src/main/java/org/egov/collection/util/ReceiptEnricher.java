@@ -137,12 +137,15 @@ public class ReceiptEnricher {
         validateTaxAndPayment(billFromRequest, validatedBill);
 
         for (int i = 0; i < validatedBill.getBillDetails().size(); i++) {
-            //validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid());
+/*            validatedBill.getBillDetails().get(i).setAmountPaid(billFromRequest.getBillDetails().get(i).getAmountPaid());
 
             validatedBill.getBillDetails().get(i).setManualReceiptNumber(billFromRequest.getBillDetails().get(i)
                     .getManualReceiptNumber());
 
             validatedBill.getBillDetails().get(i).setManualReceiptDate(billFromRequest.getBillDetails().get(i).getManualReceiptDate());
+            
+            validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());*/
+
 
             if (receipt.getInstrument().getInstrumentType().getName().equalsIgnoreCase(ONLINE.name()))
                 validatedBill.getBillDetails().get(i).setCollectionType(CollectionType.ONLINE);
@@ -154,9 +157,7 @@ public class ReceiptEnricher {
 
             validatedBill.getBillDetails().get(i).setReceiptType(ReceiptType.BILLBASED.toString());
 
-            validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
-
-            enrichBillAccountDetails(validatedBill.getBillDetails().get(i), billFromRequest.getBillDetails().get(i));
+           // enrichBillAccountDetails(validatedBill.getBillDetails().get(i), billFromRequest.getBillDetails().get(i));
 
         }
 
