@@ -144,7 +144,6 @@
               <goal>jar</goal>
             </goals>
             <configuration>
-              <classifier>client</classifier>
               <includes>
                 <include>**/master/web/contract/**</include>
                 <include>**/master/web/repository/**</include>
@@ -164,7 +163,6 @@
               <goal>jar</goal>
             </goals>
             <configuration>
-              <classifier>common</classifier>
               <includes>
                 <include>**/common/**</include>
               </includes>
