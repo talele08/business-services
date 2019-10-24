@@ -29,6 +29,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +80,7 @@ public class BillRepository {
 				Bill bill = bills.get(index);
 
 				StatusEnum status = StatusEnum.ACTIVE;
-				if(bill.getIsCancelled() == true)
+				if(!ObjectUtils.isEmpty(bill.getIsCancelled()) &&  bill.getIsCancelled() == true)
 					status = StatusEnum.CANCELLED;
 				
 				AuditDetails auditDetails = bill.getAuditDetails();
