@@ -16,9 +16,11 @@ import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.BillSearchCriteria;
+import org.egov.demand.model.BillV2.StatusEnum;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.querybuilder.BillQueryBuilder;
 import org.egov.demand.repository.rowmapper.BillRowMapper;
+import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
@@ -43,6 +45,9 @@ public class BillRepository {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private Util util;
 	
 	@Autowired
 	private BillRowMapper searchBillRowMapper;
@@ -73,6 +78,10 @@ public class BillRepository {
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
 				Bill bill = bills.get(index);
 
+				StatusEnum status = StatusEnum.ACTIVE;
+				if(bill.getIsCancelled() == true)
+					status = StatusEnum.CANCELLED;
+				
 				AuditDetails auditDetails = bill.getAuditDetails();
 				
 				ps.setString(1, bill.getId());
@@ -87,6 +96,8 @@ public class BillRepository {
 				ps.setString(10, auditDetails.getLastModifiedBy());
 				ps.setLong(11, auditDetails.getLastModifiedTime());
 				ps.setString(12, bill.getMobileNumber());
+				ps.setString(13, status.toString());
+				ps.setObject(14, util.getPGObject(bill.getAdditionalDetails()));
 			}
 			
 			@Override

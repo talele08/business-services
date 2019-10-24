@@ -15,18 +15,13 @@ import org.egov.demand.model.BillSearchCriteria;
 import org.egov.demand.model.BillV2;
 import org.egov.demand.repository.querybuilder.BillQueryBuilder;
 import org.egov.demand.repository.rowmapper.BillRowMapperV2;
-import org.egov.demand.util.Constants;
+import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequestV2;
-import org.egov.tracer.model.CustomException;
-import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,10 +36,10 @@ public class BillRepositoryV2 {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	private BillRowMapperV2 searchBillRowMapper;
+	private Util util;
 	
 	@Autowired
-	private ObjectMapper mapper;
+	private BillRowMapperV2 searchBillRowMapper;
 	
 	public List<BillV2> findBill(BillSearchCriteria billCriteria){
 		
@@ -80,7 +75,7 @@ public class BillRepositoryV2 {
 				ps.setLong(11, auditDetails.getLastModifiedTime());
 				ps.setString(12, bill.getMobileNumber());
 				ps.setString(13, bill.getStatus().toString());
-				ps.setObject(14, getPGObject(bill.getAdditionalDetails()));
+				ps.setObject(14, util.getPGObject(bill.getAdditionalDetails()));
 			}
 			
 			@Override
@@ -189,34 +184,5 @@ public class BillRepositoryV2 {
 				return billAccountDetails.size();
 			}
 		});
-	}
-
-	
-	/*
-	 * Utility methods
-	 */
-	/**
-	 * converts the object to a pgObject for persistence
-	 * 
-	 * @param additionalDetails
-	 * @return
-	 */
-	private PGobject getPGObject(Object additionalDetails) {
-
-		String value = null;
-		try {
-			value = mapper.writeValueAsString(additionalDetails);
-		} catch (JsonProcessingException e) {
-			throw new CustomException(Constants.EG_BS_JSON_EXCEPTION_KEY, Constants.EG_BS_JSON_EXCEPTION_MSG);
-		}
-
-		PGobject json = new PGobject();
-		json.setType(Constants.DB_TYPE_JSONB);
-		try {
-			json.setValue(value);
-		} catch (SQLException e) {
-			throw new CustomException(Constants.EG_BS_JSON_EXCEPTION_KEY, Constants.EG_BS_JSON_EXCEPTION_MSG);
-		}
-		return json;
 	}
 }
