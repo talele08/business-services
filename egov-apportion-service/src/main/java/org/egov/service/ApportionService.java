@@ -63,9 +63,6 @@ public class ApportionService {
         //Fetch the required MDMS data
         Object masterData = mdmsService.mDMSCall(request);
 
-        AuditDetails auditDetails = AuditDetails.builder().createdBy(request.getRequestInfo().getUserInfo()
-                .getUuid()).createdTime(System.currentTimeMillis()).build();
-
         for (Bill bill : bills) {
         	
             // Create a map of businessService to list of billDetails belonging to that businessService
@@ -92,7 +89,6 @@ public class ApportionService {
              * Apportion the paid amount among the given list of billDetail
              */
             apportion.apportionPaidAmount(bill, masterData);
-            bill.setAuditDetails(auditDetails);
 			}
 
 
