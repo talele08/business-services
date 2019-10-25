@@ -93,10 +93,6 @@ public class BillDetail {
         @JsonProperty("billAccountDetails")
         private List<BillAccountDetail> billAccountDetails = null;
 
-        @NotNull
-        @JsonProperty("collectionType")
-        private CollectionType collectionType = null;
-
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;
 
